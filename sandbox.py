@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
-from newspaper import Article
 from SemanticNetwork import SemanticNetwork
 from itertools import count
 
@@ -38,6 +37,7 @@ avg_clustering = np.mean(clustering_sequence)
 print('Average Local Clustering Coefficient: ', avg_clustering)
 
 
+# Betweenness centrality
 betweenness = nx.betweenness_centrality(G,weight='weight')
 betweenness_sequence = list(betweenness.values())
 plt.figure(3)
@@ -49,12 +49,38 @@ plt.xlabel("Betweenness Centrality")
 avg_betweenness = np.mean(betweenness_sequence)
 print('Average Betweenness Centrality: ', avg_betweenness)
 
+# Degree centrality
+degree_centrality = nx.degree_centrality(G)
+degree_centrality_sequence = list(degree_centrality.values())
+plt.figure(3)
+plt.hist(degree_centrality_sequence, bins=np.arange(min(degree_centrality_sequence), max(degree_centrality_sequence) + 0.001, 0.001), color='b')
+plt.title("Degree Centrality Histogram")
+plt.ylabel("Count")
+plt.xlabel("Degree Centrality")
+
+avg_degree_centrality = np.mean(degree_centrality_sequence)
+print('Average Degree Centrality: ', avg_degree_centrality)
+
+# Eigenvector centrality
+eig_centrality = nx.eigenvector_centrality(G,weight='weight')
+eig_centrality_sequence = list(eig_centrality.values())
+plt.figure(3)
+plt.hist(eig_centrality_sequence, bins=np.arange(min(eig_centrality_sequence), max(eig_centrality_sequence) + 0.001, 0.001), color='b')
+plt.title("Eigenvector Centrality Histogram")
+plt.ylabel("Count")
+plt.xlabel("Eigenvector Centrality")
+
+avg_eig_centrality = np.mean(eig_centrality_sequence)
+print('Average Eigenvector Centrality: ', avg_eig_centrality)
+
 
 # Map node classes to colors and use to plot graph
 classes = set(nx.get_node_attributes(G,'sector').values())
 mapping = dict(zip(sorted(classes),count()))
 nodes = G.nodes()
-colors = [mapping[G.nodes[n]['sector']] for n in nodes]
+colors = [mapping[nx.get_node_attributes(G,'sector')[n]] for n in nodes]
 plt.figure(4)
-nx.draw_networkx(G, pos=nx.spring_layout(G), with_labels=True, node_size=degree_sequence, node_color=colors, alpha=0.9, width=0.25, font_size=6, font_color='yellow')
+nx.draw_networkx(G, pos=nx.spring_layout(G), with_labels=True, node_size=degree_sequence, node_color=colors, alpha=0.9, width=0.1, font_size=6, font_color='black')
+# ax = plt.gca()
+# ax.set_facecolor('black')
 plt.show()
