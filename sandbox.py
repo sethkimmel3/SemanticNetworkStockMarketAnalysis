@@ -21,6 +21,22 @@ components = sorted(nx.connected_components(G), key=len, reverse=True)
 print('Sizes of connected components: ', [len(c) for c in components])
 print('Disconnected nodes: ', components[1:])
 
+print('\n################## Distance Measures ##################')
+# Distance measures
+big = G.subgraph(components[0])
+center = nx.center(big)
+diameter = nx.diameter(big)
+eccentricity = nx.eccentricity(big)
+periphery = nx.periphery(big)
+radius = nx.radius(big)
+print('Radius:', radius)
+print('Diameter:', diameter)
+print('Eccentricity (min):', np.min(list(eccentricity.values())))
+print('Eccentricity (max):', np.max(list(eccentricity.values())))
+print('Eccentricity (mean):', np.mean(list(eccentricity.values())))
+print('Size of center:', len(center))
+print('Size of periphery:', len(periphery))
+
 # Compute and plot degree distribution
 print('\n################## Degree ##################')
 degree_sequence = [d for n, d in G.degree()]  # degree sequence
