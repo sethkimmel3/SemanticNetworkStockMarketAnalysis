@@ -121,6 +121,8 @@ def create_indexes(num_to_generate):
     for k in range(num_bins):
         print(max_bins[k])
 
+    return list(min_bins),list(max_bins)
+
 #economic_importance_analysis()
 
 min_indexes, max_indexes = create_indexes(num_to_generate=10)
