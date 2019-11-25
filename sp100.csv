@@ -30,7 +30,7 @@ COST,Costco Wholesale Corp.,Costco,Consumer Staples
 CSCO,Cisco Systems,Cisco,Information Technology
 CVS,CVS Health,CVS,Health Care
 CVX,Chevron Corporation,Chevron,Energy
-DD,DuPont de Nemours Inc,DuPont De Nemours,Materials
+DD,DuPont de Nemours Inc,DuPont de Nemours,Materials
 DHR,Danaher Corporation,Danaher,Health Care
 DIS,The Walt Disney Company,Disney,Communication Services
 DOW,Dow Inc.,Dow Chemical,Materials
@@ -39,7 +39,7 @@ EMR,Emerson Electric Co.,Emerson Electric,Industrials
 EXC,Exelon,Exelon,Utilities
 F,Ford Motor Company,Ford,Consumer Discretionary
 FB,Facebook,Facebook,Communication Services
-FDX,FedEx,Fedex,Industrials
+FDX,FedEx,FedEx,Industrials
 GD,General Dynamics,General Dynamics,Industrials
 GE,General Electric,General Electric,Industrials
 GILD,Gilead Sciences,Gilead Sciences,Health Care
@@ -62,19 +62,19 @@ MA,MasterCard Inc,Mastercard,Information Technology
 MCD,McDonald's Corp,McDonald's,Consumer Discretionary
 MDLZ,Mondelēz International,Mondelez,Consumer Staples
 MDT,Medtronic plc,Medtronic,Health Care
-MET,MetLife Inc.,Metlife,Financials
+MET,MetLife Inc.,MetLife,Financials
 MMM,3M Company,3M,Industrials
 MO,Altria Group,Altria,Consumer Staples
 MRK,Merck & Co.,Merck,Health Care
 MS,Morgan Stanley,Morgan Stanley,Financials
 MSFT,Microsoft,Microsoft,Information Technology
-NEE,NextEra Energy,Nextera,Utilities
+NEE,NextEra Energy,NextEra,Utilities
 NFLX,Netflix,Netflix,Communication Services
 NKE,"Nike, Inc.",Nike,Consumer Discretionary
 NVDA,NVIDIA Corp.,Nvidia,Information Technology
 ORCL,Oracle Corporation,Oracle,Information Technology
 OXY,Occidental Petroleum Corp.,Occidental Petroleum,Energy
-PEP,PepsiCo,Pepsico,Consumer Staples
+PEP,PepsiCo,PepsiCo,Consumer Staples
 PFE,Pfizer Inc,Pfizer,Health Care
 PG,Procter & Gamble Co,Procter & Gamble,Consumer Staples
 PM,Philip Morris International,Philip Morris,Consumer Staples
@@ -88,7 +88,7 @@ SPG,"Simon Property Group, Inc.",Simon Property Group,Real Estate
 T,AT&T Inc,AT&T,Communication Services
 TGT,Target Corporation,Target,Consumer Discretionary
 TXN,Texas Instruments,Texas Instruments,Information Technology
-UNH,UnitedHealth Group,Unitedhealth,Health Care
+UNH,UnitedHealth Group,UnitedHealth,Health Care
 UNP,Union Pacific Corporation,Union Pacific,Industrials
 UPS,United Parcel Service,UPS,Industrials
 USB,U.S. Bancorp,USB,Financials
