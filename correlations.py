@@ -59,14 +59,14 @@ def economic_importance_analysis():
     for type in ['Betweenness', 'Degree', 'Eigenvector']:
         # get x, y data points
         if(type == 'Betweenness'):
-            x = np.asarray([v[0] for k,v in market_cap_and_betweenness.items()], dtype=np.float)
-            y = np.asarray([v[1] for k,v in market_cap_and_betweenness.items()], dtype=np.float)
+            x = np.asarray([v[1] for k, v in market_cap_and_betweenness.items()], dtype=np.float)
+            y = np.asarray([v[0] for k,v in market_cap_and_betweenness.items()], dtype=np.float)
         elif(type == 'Degree'):
-            x = np.asarray([v[0] for k, v in market_cap_and_degree_centrality.items()], dtype=np.float)
-            y = np.asarray([v[1] for k, v in market_cap_and_degree_centrality.items()], dtype=np.float)
+            x = np.asarray([v[1] for k, v in market_cap_and_degree_centrality.items()], dtype=np.float)
+            y = np.asarray([v[0] for k, v in market_cap_and_degree_centrality.items()], dtype=np.float)
         elif(type == 'Eigenvector'):
-            x = np.asarray([v[0] for k, v in market_cap_and_eig_centrality.items()], dtype=np.float)
-            y = np.asarray([v[1] for k, v in market_cap_and_eig_centrality.items()], dtype=np.float)
+            x = np.asarray([v[1] for k, v in market_cap_and_eig_centrality.items()], dtype=np.float)
+            y = np.asarray([v[0] for k, v in market_cap_and_eig_centrality.items()], dtype=np.float)
 
         # plot it
         plt.scatter(x,y)
@@ -102,8 +102,8 @@ def create_indexes(num_to_generate):
                         if(col_label not in min_bins[k]):
                             min_bins[k].append(col_label)
 
-    # for k in range(num_bins):
-    #     print(min_bins[k])
+    for k in range(num_bins):
+        print(min_bins[k])
 
     # let's try the inverse problem - add all companies to every index, and throw them out if they have any weighting above the bins threshold
     max_bins = {}
@@ -121,8 +121,8 @@ def create_indexes(num_to_generate):
                         if(col_label in max_bins[k]):
                             max_bins[k].remove(col_label)
 
-    # for k in range(num_bins):
-    #     print(max_bins[k])
+    for k in range(num_bins):
+        print(max_bins[k])
 
     return min_bins,max_bins
 
@@ -279,7 +279,7 @@ def degree_separation_to_price_changes(past_or_future, n_timesteps, k_timesteps)
         print(str(k) + ' : ' + str(v))
 
 # correlate price changes differences and weight separation (adjacent only)
-def weight_separation_to_price_changes(past_or_future, n_timesteps, k_timesteps):
+def weight_separation_to_price_changes(past_or_future, n_timesteps, k_timesteps, averaged=False):
     # turn the time-series into price changes according to n_timesteps
     symbol_to_price_changes = {}
     for symbol in sp100_symbols:
@@ -318,13 +318,24 @@ def weight_separation_to_price_changes(past_or_future, n_timesteps, k_timesteps)
 
                 computed.append((node1,node2))
 
-    for k, v in weight_to_price_changes.items():
-        weight_to_price_changes[k] = np.average(v)
+    if(averaged == True):
+        for k, v in weight_to_price_changes.items():
+            weight_to_price_changes[k] = [np.average(v)]
 
-    sorted_changes = sorted(weight_to_price_changes.items(), key=operator.itemgetter(0))
+    #sorted_changes = sorted(weight_to_price_changes.items(), key=operator.itemgetter(0))
 
-    x = np.asarray([item[0] for item in sorted_changes], dtype=np.float)
-    y = np.asarray([item[1] for item in sorted_changes], dtype=np.float)
+    # print([item[0] for item in sorted_changes])
+    # print([item[1] for item in sorted_changes])
+
+    x = []
+    y = []
+    for k,v in weight_to_price_changes.items():
+        for val in v:
+            x.append(k)
+            y.append(val)
+
+    x = np.asarray(x, dtype=np.float)
+    y = np.asarray(y, dtype=np.float)
 
     plt.scatter(x, y)
     plt.title('Absolute Difference in Node to Node \n Price Changes (' + past_or_future + ' values) vs. Weight Separation')
@@ -392,23 +403,23 @@ def correlate_strength_of_indexes_with_price_change_differences(indexes, past_or
 Run the Individual Analyses Here
 """
 
-economic_importance_analysis()
+# economic_importance_analysis()
 
-min_indexes, max_indexes = create_indexes(num_to_generate=10)
+# min_indexes, max_indexes = create_indexes(num_to_generate=10)
+#
+# # for the following analyses, you can vary n and k in loops to see the impact
+#
+# centrality_to_neighborhood_prices('past', n_timesteps=3, k_timesteps=0, weighted=True)
+# centrality_to_neighborhood_prices('future', n_timesteps=3, k_timesteps=1, weighted=True)
+#
+# degree_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0)
+# degree_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1)
+#
+# weight_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0, averaged=False)
+# weight_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1, averaged=False)
 
-# for the following analyses, you can vary n and k in loops to see the impact
-
-centrality_to_neighborhood_prices('past',n_timesteps=3, k_timesteps=0, weighted=True)
-centrality_to_neighborhood_prices('future',n_timesteps=3, k_timesteps=1, weighted=True)
-
-degree_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0)
-degree_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1)
-
-weight_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0)
-weight_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1)
-
-correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'past', n_timesteps=3, k_timesteps=0)
-correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'future', n_timesteps=3, k_timesteps=1)
-
-correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'past', n_timesteps=3, k_timesteps=0)
-correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'future', n_timesteps=3, k_timesteps=1)
+# correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'past', n_timesteps=3, k_timesteps=0)
+# correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'future', n_timesteps=3, k_timesteps=1)
+#
+# correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'past', n_timesteps=3, k_timesteps=0)
+# correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'future', n_timesteps=3, k_timesteps=1)
