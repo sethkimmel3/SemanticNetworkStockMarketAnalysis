@@ -33,13 +33,16 @@ for i in range(len(sp100_symbols)):
 
 
 # Finding economically important stocks
-def economic_importance_analysis():
+def economic_importance_analysis(betweenness_centrality_weighted=True, eigenvector_centrality_weighted=True):
     # get the market cap data
     with open('market_cap_data_11_20_19.json') as json_file:
         market_caps = json.load(json_file)
 
     # Betweenness centrality
-    betweenness = nx.betweenness_centrality(G,weight='weight')
+    if(betweenness_centrality_weighted == True):
+        betweenness = nx.betweenness_centrality(G, weight='weight')
+    else:
+        betweenness = nx.betweenness_centrality(G)
     market_cap_and_betweenness = {}
 
     # Degree centrality
@@ -47,7 +50,10 @@ def economic_importance_analysis():
     market_cap_and_degree_centrality = {}
 
     # Eigenvector centrality
-    eig_centrality = nx.eigenvector_centrality(G,weight='weight')
+    if(eigenvector_centrality_weighted == True):
+        eig_centrality = nx.eigenvector_centrality(G, weight='weight')
+    else:
+        eig_centrality = nx.eigenvector_centrality(G)
     market_cap_and_eig_centrality = {}
 
     for k,v in market_caps.items():
@@ -59,7 +65,7 @@ def economic_importance_analysis():
     for type in ['Betweenness', 'Degree', 'Eigenvector']:
         # get x, y data points
         if(type == 'Betweenness'):
-            x = np.asarray([v[1] for k, v in market_cap_and_betweenness.items()], dtype=np.float)
+            x = np.asarray([v[1] for k,v in market_cap_and_betweenness.items()], dtype=np.float)
             y = np.asarray([v[0] for k,v in market_cap_and_betweenness.items()], dtype=np.float)
         elif(type == 'Degree'):
             x = np.asarray([v[1] for k, v in market_cap_and_degree_centrality.items()], dtype=np.float)
@@ -70,9 +76,9 @@ def economic_importance_analysis():
 
         # plot it
         plt.scatter(x,y)
-        plt.title('Market Cap vs.' + type + ' Centrality')
-        plt.xlabel('Market Cap')
-        plt.ylabel(type + ' Centrality')
+        plt.title('Market Cap vs. ' + type + ' Centrality')
+        plt.ylabel('Market Cap')
+        plt.xlabel(type + ' Centrality')
         plt.show()
 
 
@@ -265,7 +271,7 @@ def degree_separation_to_price_changes(past_or_future, n_timesteps, k_timesteps)
                     for i in range(90 - n_timesteps - k_timesteps):
                         diff_price_changes[i] = abs(symbol_to_price_changes[sp100_common_names_to_symbols[node1]][i] - symbol_to_price_changes[sp100_common_names_to_symbols[node2]][i + k_timesteps])
 
-                diff_price_changes = np.sum(diff_price_changes)
+                diff_price_changes = np.average(diff_price_changes)
 
                 if(path_total in distance_to_price_changes):
                     distance_to_price_changes[path_total].append(diff_price_changes)
@@ -403,23 +409,23 @@ def correlate_strength_of_indexes_with_price_change_differences(indexes, past_or
 Run the Individual Analyses Here
 """
 
-# economic_importance_analysis()
+economic_importance_analysis(betweenness_centrality_weighted=False, eigenvector_centrality_weighted=False)
 
-# min_indexes, max_indexes = create_indexes(num_to_generate=10)
+min_indexes, max_indexes = create_indexes(num_to_generate=10)
 #
 # # for the following analyses, you can vary n and k in loops to see the impact
 #
-# centrality_to_neighborhood_prices('past', n_timesteps=3, k_timesteps=0, weighted=True)
-# centrality_to_neighborhood_prices('future', n_timesteps=3, k_timesteps=1, weighted=True)
-#
-# degree_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0)
-# degree_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1)
-#
-# weight_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0, averaged=False)
-# weight_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1, averaged=False)
+centrality_to_neighborhood_prices('past', n_timesteps=3, k_timesteps=0, weighted=True)
+centrality_to_neighborhood_prices('future', n_timesteps=3, k_timesteps=1, weighted=True)
 
-# correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'past', n_timesteps=3, k_timesteps=0)
-# correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'future', n_timesteps=3, k_timesteps=1)
-#
-# correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'past', n_timesteps=3, k_timesteps=0)
-# correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'future', n_timesteps=3, k_timesteps=1)
+degree_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0)
+degree_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1)
+
+weight_separation_to_price_changes('past', n_timesteps=1, k_timesteps=0, averaged=False)
+weight_separation_to_price_changes('future', n_timesteps=3, k_timesteps=1, averaged=False)
+
+correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'past', n_timesteps=3, k_timesteps=0)
+correlate_strength_of_indexes_with_price_change_differences(min_indexes, 'future', n_timesteps=3, k_timesteps=1)
+
+correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'past', n_timesteps=3, k_timesteps=0)
+correlate_strength_of_indexes_with_price_change_differences(max_indexes, 'future', n_timesteps=3, k_timesteps=1)
